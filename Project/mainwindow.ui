@@ -1,0 +1,821 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1400</width>
+    <height>900</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1200</width>
+    <height>800</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Client Management System - Administrator</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>:/resources/app_icon.ico</normaloff>:/resources/app_icon.ico</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/* Background will be set programmatically */</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">QWidget#centralwidget {
+    background: url(:/resources/background.png) center/cover;
+}</string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_main">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QFrame" name="headerFrame">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>80</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>80</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame#headerFrame {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+QLabel#titleLabel {
+    color: white;
+    font-size: 28px;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+QLabel#subtitleLabel {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    font-weight: 300;
+}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="headerLayout">
+       <property name="leftMargin">
+        <number>30</number>
+       </property>
+       <property name="topMargin">
+        <number>15</number>
+       </property>
+       <property name="rightMargin">
+        <number>30</number>
+       </property>
+       <property name="bottomMargin">
+        <number>15</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="titleLabel">
+         <property name="text">
+          <string>🏢 Client Management System</string>
+         </property>
+         <property name="objectName">
+          <string notr="true">titleLabel</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="subtitleLabel">
+         <property name="text">
+          <string>Administrator Dashboard - Manage clients and commands efficiently</string>
+         </property>
+         <property name="objectName">
+          <string notr="true">subtitleLabel</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTabWidget" name="mainTabWidget">
+      <property name="styleSheet">
+       <string notr="true">QTabWidget::pane {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    border-top-left-radius: 0px;
+}
+
+QTabBar::tab {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border: none;
+    padding: 15px 25px;
+    margin-right: 2px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 200px;
+}
+
+QTabBar::tab:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+}
+
+QTabBar::tab:selected {
+    background: rgba(255, 255, 255, 0.95);
+    color: #2d3748;
+    font-weight: 600;
+}</string>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <property name="documentMode">
+       <bool>true</bool>
+      </property>
+      <property name="tabsClosable">
+       <bool>false</bool>
+      </property>
+      <property name="movable">
+       <bool>false</bool>
+      </property>
+      <property name="tabBarAutoHide">
+       <bool>false</bool>
+      </property>
+      <widget class="QWidget" name="clientsTab">
+       <attribute name="title">
+        <string>👥 Clients Management</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="clientsLayout">
+        <property name="spacing">
+         <number>20</number>
+        </property>
+        <property name="leftMargin">
+         <number>30</number>
+        </property>
+        <property name="topMargin">
+         <number>30</number>
+        </property>
+        <property name="rightMargin">
+         <number>30</number>
+        </property>
+        <property name="bottomMargin">
+         <number>30</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="clientsHeaderLabel">
+          <property name="styleSheet">
+           <string notr="true">font-size: 24px;
+font-weight: 600;
+color: #2d3748;
+margin-bottom: 8px;</string>
+          </property>
+          <property name="text">
+           <string>👥 Client Management</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="clientsSubtitleLabel">
+          <property name="styleSheet">
+           <string notr="true">font-size: 14px;
+color: #718096;
+margin-bottom: 20px;</string>
+          </property>
+          <property name="text">
+           <string>Manage customer information, add new clients, and view client details</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="clientsStatsFrame">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>120</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>120</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QFrame#clientsStatsFrame {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    margin-bottom: 10px;
+}</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="clientActionsLayout">
+          <property name="spacing">
+           <number>15</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="addClientBtn">
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+               stop:0 rgba(102, 126, 234, 1), stop:1 rgba(118, 75, 162, 1));
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 120px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+               stop:0 rgba(90, 110, 220, 1), stop:1 rgba(100, 65, 150, 1));
+}</string>
+            </property>
+            <property name="text">
+             <string>➕ Add New Client</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="clientStatsBtn">
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+               stop:0 rgba(0, 212, 170, 1), stop:1 rgba(0, 168, 255, 1));
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 120px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+               stop:0 rgba(0, 190, 150, 1), stop:1 rgba(0, 150, 230, 1));
+}</string>
+            </property>
+            <property name="text">
+             <string>📊 View Statistics</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="exportClientsBtn">
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    background: transparent;
+    color: #667eea;
+    border: 2px solid #667eea;
+    border-radius: 10px;
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 120px;
+}
+
+QPushButton:hover {
+    background: #667eea;
+    color: white;
+}</string>
+            </property>
+            <property name="text">
+             <string>📄 Export Data</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="clientActionsHSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="clientSearchLayout">
+          <property name="spacing">
+           <number>15</number>
+          </property>
+          <item>
+           <widget class="QLineEdit" name="clientSearchEdit">
+            <property name="styleSheet">
+             <string notr="true">QLineEdit {
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    background: white;
+}
+
+QLineEdit:focus {
+    border-color: #667eea;
+}</string>
+            </property>
+            <property name="placeholderText">
+             <string>🔍 Search clients by name, email, or city...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="clientSearchBtn">
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    background: transparent;
+    color: #667eea;
+    border: 2px solid #667eea;
+    border-radius: 10px;
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    background: #667eea;
+    color: white;
+}</string>
+            </property>
+            <property name="text">
+             <string>Search</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="clientsTable">
+          <property name="styleSheet">
+           <string notr="true">QTableWidget {
+    background: white;
+    border: 1px solid #f0f0f0;
+    border-radius: 15px;
+    gridline-color: #f0f0f0;
+    selection-background-color: rgba(102, 126, 234, 0.2);
+}
+
+QTableWidget::item {
+    padding: 8px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+QTableWidget::item:selected {
+    background: rgba(102, 126, 234, 0.3);
+}
+
+QHeaderView::section {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+               stop:0 rgba(248, 250, 252, 1), stop:1 rgba(226, 232, 240, 1));
+    color: #2d3748;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #e2e8f0;
+    font-weight: 600;
+}</string>
+          </property>
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+          <property name="sortingEnabled">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="commandsTab">
+       <attribute name="title">
+        <string>📋 Commands Management</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="commandsLayout">
+        <property name="spacing">
+         <number>20</number>
+        </property>
+        <property name="leftMargin">
+         <number>30</number>
+        </property>
+        <property name="topMargin">
+         <number>30</number>
+        </property>
+        <property name="rightMargin">
+         <number>30</number>
+        </property>
+        <property name="bottomMargin">
+         <number>30</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="commandsHeaderLabel">
+          <property name="styleSheet">
+           <string notr="true">font-size: 24px;
+font-weight: 600;
+color: #2d3748;
+margin-bottom: 8px;</string>
+          </property>
+          <property name="text">
+           <string>📋 Commands Management</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="commandsSubtitleLabel">
+          <property name="styleSheet">
+           <string notr="true">font-size: 14px;
+color: #718096;
+margin-bottom: 20px;</string>
+          </property>
+          <property name="text">
+           <string>Track orders, manage deliveries, and monitor payment status</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="commandsStatsFrame">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>120</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>120</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QFrame#commandsStatsFrame {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    margin-bottom: 10px;
+}</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="commandActionsLayout">
+          <property name="spacing">
+           <number>15</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="addCommandBtn">
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+               stop:0 rgba(102, 126, 234, 1), stop:1 rgba(118, 75, 162, 1));
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 120px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+               stop:0 rgba(90, 110, 220, 1), stop:1 rgba(100, 65, 150, 1));
+}</string>
+            </property>
+            <property name="text">
+             <string>➕ New Command</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="salesReportBtn">
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+               stop:0 rgba(0, 212, 170, 1), stop:1 rgba(0, 168, 255, 1));
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 120px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+               stop:0 rgba(0, 190, 150, 1), stop:1 rgba(0, 150, 230, 1));
+}</string>
+            </property>
+            <property name="text">
+             <string>📈 Sales Report</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="deliveryStatusBtn">
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    background: transparent;
+    color: #667eea;
+    border: 2px solid #667eea;
+    border-radius: 10px;
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 120px;
+}
+
+QPushButton:hover {
+    background: #667eea;
+    color: white;
+}</string>
+            </property>
+            <property name="text">
+             <string>🚚 Delivery Status</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="commandActionsHSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="commandSearchLayout">
+          <property name="spacing">
+           <number>15</number>
+          </property>
+          <item>
+           <widget class="QLineEdit" name="commandSearchEdit">
+            <property name="styleSheet">
+             <string notr="true">QLineEdit {
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    background: white;
+}
+
+QLineEdit:focus {
+    border-color: #667eea;
+}</string>
+            </property>
+            <property name="placeholderText">
+             <string>🔍 Search commands by ID, client, or payment method...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="commandSearchBtn">
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+    background: transparent;
+    color: #667eea;
+    border: 2px solid #667eea;
+    border-radius: 10px;
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    background: #667eea;
+    color: white;
+}</string>
+            </property>
+            <property name="text">
+             <string>Search</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="commandsTable">
+          <property name="styleSheet">
+           <string notr="true">QTableWidget {
+    background: white;
+    border: 1px solid #f0f0f0;
+    border-radius: 15px;
+    gridline-color: #f0f0f0;
+    selection-background-color: rgba(102, 126, 234, 0.2);
+}
+
+QTableWidget::item {
+    padding: 8px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+QTableWidget::item:selected {
+    background: rgba(102, 126, 234, 0.3);
+}
+
+QHeaderView::section {
+    background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1,
+               stop:0 rgba(248, 250, 252, 1), stop:1 rgba(226, 232, 240, 1));
+    color: #2d3748;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #e2e8f0;
+    font-weight: 600;
+}</string>
+          </property>
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+          <property name="sortingEnabled">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1400</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionNew_Client"/>
+    <addaction name="actionNew_Command"/>
+    <addaction name="separator"/>
+    <addaction name="actionImport_Data"/>
+    <addaction name="actionExport_Data"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionRefresh"/>
+    <addaction name="separator"/>
+    <addaction name="actionClients_Statistics"/>
+    <addaction name="actionSales_Report"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+    <addaction name="actionUser_Manual"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuView"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionNew_Client">
+   <property name="text">
+    <string>New Client</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionNew_Command">
+   <property name="text">
+    <string>New Command</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+N</string>
+   </property>
+  </action>
+  <action name="actionImport_Data">
+   <property name="text">
+    <string>Import Data</string>
+   </property>
+  </action>
+  <action name="actionExport_Data">
+   <property name="text">
+    <string>Export Data</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionRefresh">
+   <property name="text">
+    <string>Refresh</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="actionClients_Statistics">
+   <property name="text">
+    <string>Clients Statistics</string>
+   </property>
+  </action>
+  <action name="actionSales_Report">
+   <property name="text">
+    <string>Sales Report</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionUser_Manual">
+   <property name="text">
+    <string>User Manual</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

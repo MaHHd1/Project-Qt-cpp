@@ -1,0 +1,11 @@
+build/obj/main.o
+build/obj/clients.o
+build/obj/commands.o
+build/obj/connection.o
+build/obj/mainwindow.o
+build/obj/clientswindow.o
+build/obj/commandswindow.o
+build/obj/moc_clients.o
+build/obj/moc_commands.o
+build/obj/moc_mainwindow.o
+build/obj/moc_clientswindow.o
