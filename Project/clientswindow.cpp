@@ -307,7 +307,7 @@ void ClientsWindow::applyModernStyling()
         "} "
 
         "QLabel#subtitleLabel { "
-        "color: rgba(255, 255, 255, 0.8); "
+        "color: rgba(255, 255, 255, 0.9); "  // Increased opacity
         "font-size: 14px; "
         "font-weight: 400; "
         "} "
@@ -318,18 +318,18 @@ void ClientsWindow::applyModernStyling()
         "} "
 
         "QFormLayout QLabel { "
-        "color: #4a5568; "
+        "color: #2d3748; "  // Darker gray for better contrast
         "font-size: 14px; "
         "font-weight: 600; "
         "} "
 
         "QFrame#buttonFrame { "
-        "background: rgba(247, 250, 252, 0.8); "
+        "background: rgba(247, 250, 252, 0.9); "  // Less transparent
         "border-top: 1px solid #e2e8f0; "
         "} "
 
         "QLabel#validationLabel { "
-        "color: #f56565; "
+        "color: #c53030; "  // Darker red for better readability
         "font-size: 12px; "
         "font-weight: 500; "
         "background: #fed7d7; "
@@ -340,20 +340,53 @@ void ClientsWindow::applyModernStyling()
         "}"
         );
 
-    // Apply input styles
-    QString inputStyle = VALID_STYLE;
+    // Enhanced input styles with explicit text color
+    QString inputStyle =
+        "QLineEdit, QTextEdit { "
+        "border: 2px solid #e2e8f0; "
+        "border-radius: 8px; "
+        "padding: 8px 12px; "
+        "font-size: 14px; "
+        "background: white; "
+        "color: #2d3748; "  // Explicit dark text color
+        "} "
+        "QLineEdit:focus, QTextEdit:focus { "
+        "border-color: #667eea; "
+        "outline: none; "
+        "}";
+
     nameEdit->setStyleSheet(inputStyle);
     emailEdit->setStyleSheet(inputStyle);
     cityEdit->setStyleSheet(inputStyle);
     postalEdit->setStyleSheet(inputStyle);
     addressEdit->setStyleSheet(inputStyle);
 
-    // Apply button styles
-    saveButton->setStyleSheet(BUTTON_PRIMARY_STYLE);
-    cancelButton->setStyleSheet(BUTTON_SECONDARY_STYLE);
-    clearButton->setStyleSheet(BUTTON_DANGER_STYLE);
+    // Enhanced button styles with better contrast
+    saveButton->setStyleSheet(
+        "QPushButton { "
+        "background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, "
+        "stop:0 rgba(102, 126, 234, 1), stop:1 rgba(118, 75, 162, 1)); "
+        "color: white; "
+        "border: none; "
+        "border-radius: 8px; "
+        "padding: 12px 24px; "
+        "font-size: 14px; "
+        "font-weight: 600; "
+        "min-width: 100px; "
+        "} "
+        "QPushButton:hover { "
+        "background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, "
+        "stop:0 rgba(90, 110, 220, 1), stop:1 rgba(100, 65, 150, 1)); "
+        "} "
+        "QPushButton:pressed { "
+        "background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, "
+        "stop:0 rgba(80, 100, 200, 1), stop:1 rgba(90, 55, 140, 1)); "
+        "} "
+        "QPushButton:disabled { "
+        "background: #cbd5e0; "  // Light gray when disabled
+        "color: #718096; "
+        "}");
 }
-
 void ClientsWindow::updateWindowTitle()
 {
     switch (currentMode) {

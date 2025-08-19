@@ -1,0 +1,11 @@
+.obj/main.o
+.obj/clients.o
+.obj/commands.o
+.obj/connection.o
+.obj/mainwindow.o
+.obj/clientswindow.o
+.obj/commandswindow.o
+.obj/moc_clients.o
+.obj/moc_commands.o
+.obj/moc_mainwindow.o
+.obj/moc_commandswindow.o

@@ -1,0 +1,11 @@
+debug/main.o
+debug/clients.o
+debug/commands.o
+debug/connection.o
+debug/mainwindow.o
+debug/clientswindow.o
+debug/commandswindow.o
+debug/moc_clients.o
+debug/moc_commands.o
+debug/moc_mainwindow.o
+debug/moc_commandswindow.o

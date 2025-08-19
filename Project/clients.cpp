@@ -40,52 +40,66 @@ ClientDAO::~ClientDAO()
     }
 }
 
-bool ClientDAO::createClient(const Client& client)
-{
+bool ClientDAO::createClient(const Client& client) {
+    // Input validation
     if (!client.isValid()) {
-        emit errorOccurred("Invalid client data - name and email are required");
-        return false;
-    }
-
-    // Check if email already exists
-    if (emailExists(client.email)) {
-        emit errorOccurred("Email already exists: " + client.email);
+        emit errorOccurred("Name and email are required");
         return false;
     }
 
     Connection& conn = Connection::getInstance();
     if (!conn.isConnected()) {
-        emit errorOccurred("Database not connected");
+        emit errorOccurred("Database connection error");
         return false;
     }
 
-    QSqlQuery query(conn.getDatabase());
-    query.prepare("INSERT INTO CLIENTS (NAME, EMAIL, CITY, POSTAL, ADDRESS) "
-                  "VALUES (:name, :email, :city, :postal, :address)");
+    // Start transaction
+    QSqlDatabase db = conn.getDatabase();
+    db.transaction();
 
-    query.bindValue(":name", client.name.trimmed());
-    query.bindValue(":email", client.email.trimmed().toLower());
-    query.bindValue(":city", client.city.trimmed());
-    query.bindValue(":postal", client.postal.trimmed());
-    query.bindValue(":address", client.address.trimmed());
-
-    if (!executeQuery(query, "Create Client")) {
-        return false;
-    }
-
-    // Get the new client ID
-    QSqlQuery lastIdQuery(conn.getDatabase());
-    if (lastIdQuery.exec("SELECT CLIENTS_SEQ.CURRVAL FROM DUAL")) {
-        if (lastIdQuery.next()) {
-            Client newClient = client;
-            newClient.id = lastIdQuery.value(0).toInt();
-            emit clientCreated(newClient);
-            qDebug() << "✓ Client created successfully:" << newClient.toString();
+    try {
+        // 1. Get next sequence value
+        QSqlQuery seqQuery(db);
+        if (!seqQuery.exec("SELECT LAKHOUA.CLIENTS_SEQ.NEXTVAL FROM DUAL") || !seqQuery.next()) {
+            throw std::runtime_error("Sequence error: " + seqQuery.lastError().text().toStdString());
         }
-    }
+        int newId = seqQuery.value(0).toInt();
 
-    refreshTableModel();
-    return true;
+        // 2. Insert with explicit ID
+        QSqlQuery query(db);
+        query.prepare(
+            "INSERT INTO LAKHOUA.CLIENTS (ID, NAME, EMAIL, CITY, POSTAL, ADDRESS) "
+            "VALUES (:id, :name, :email, :city, :postal, :address)"
+            );
+
+        query.bindValue(":id", newId);
+        query.bindValue(":name", client.name.trimmed());
+        query.bindValue(":email", client.email.trimmed().toLower());
+        query.bindValue(":city", client.city.trimmed());
+        query.bindValue(":postal", client.postal.trimmed());
+        query.bindValue(":address", client.address.trimmed());
+
+        if (!query.exec()) {
+            throw std::runtime_error("Insert failed: " + query.lastError().text().toStdString());
+        }
+
+        // Commit transaction
+        if (!db.commit()) {
+            throw std::runtime_error("Commit failed");
+        }
+
+        // Success
+        Client newClient = client;
+        newClient.id = newId;
+        emit clientCreated(newClient);
+        refreshTableModel();
+        return true;
+
+    } catch (const std::exception& e) {
+        db.rollback();
+        emit errorOccurred(QString::fromStdString(e.what()));
+        return false;
+    }
 }
 
 Client ClientDAO::readClient(int id)

@@ -1,11 +1,11 @@
 # Project.pro - Qt Project Configuration File
 # Client Management System with Oracle Database Connection
 
-# Qt modules required
+# Qt modules required - let qmake handle the linking automatically
 QT += core gui widgets sql
 
-# Enable Qt's moc system and C++17
-CONFIG += qt c++17 warn_on
+# Enable Qt's moc system
+CONFIG += qt warn_on
 
 # Target executable name
 TARGET = ClientManagementSystem
@@ -15,7 +15,7 @@ TEMPLATE = app
 
 # Project configuration
 CONFIG -= app_bundle
-CONFIG -= console  # Remove for GUI applications
+CONFIG -= console
 
 # Version information
 VERSION = 1.0.0
@@ -44,66 +44,41 @@ HEADERS += \
     commandswindow.h
 
 # UI files (.ui)
-FORMS += \
-    mainwindow.ui
-
-# Resources - comment out if you don't have resources.qrc
-# RESOURCES += resources
-
-# Output directories - simplified approach
-OBJECTS_DIR = build/obj
-MOC_DIR = build/moc
-RCC_DIR = build/rcc
-UI_DIR = build/ui
+FORMS += mainwindow.ui
 
 # Compiler flags
 QMAKE_CXXFLAGS += -Wall -Wextra
-QMAKE_CXXFLAGS_RELEASE -= -O2
-QMAKE_CXXFLAGS_RELEASE += -O3
+QMAKE_CXXFLAGS_RELEASE += -O2
 
 # Platform-specific configurations
 win32 {
     # Windows-specific configuration
     CONFIG += windows
-
-    # Oracle Client Libraries for Windows (if using Oracle)
-    # Uncomment and adjust paths if you're using Oracle
-    # LIBS += -loci
-    # INCLUDEPATH += "C:/oracle/client/include"
-    # LIBS += -L"C:/oracle/client/lib"
-
-    # For SQLite (default Qt SQL driver)
-    # No additional libraries needed
-}
-
-unix:!macx {
-    # Linux-specific configuration
-    # For Oracle: LIBS += -lclntsh
-    # INCLUDEPATH += /opt/oracle/instantclient_21_1/include
-    # LIBS += -L/opt/oracle/instantclient_21_1/lib
-}
-
-macx {
-    # macOS-specific configuration
-    # For Oracle: LIBS += -lclntsh
-    # INCLUDEPATH += /opt/oracle/instantclient_19_8/include
-    # LIBS += -L/opt/oracle/instantclient_19_8/lib
+    QMAKE_CXXFLAGS += -DUNICODE -D_UNICODE
 }
 
 # Debug and Release configurations
 CONFIG(debug, debug|release) {
-    DESTDIR = debug
+    TARGET = $$join(TARGET,,,_debug)
     DEFINES += DEBUG_MODE
     QMAKE_CXXFLAGS += -g
 } else {
-    DESTDIR = release
     DEFINES += RELEASE_MODE
 }
 
 # Additional includes
 INCLUDEPATH += $$PWD
 
-# Minimum Qt version required
-lessThan(QT_MAJOR_VERSION, 6) {
-    lessThan(QT_MAJOR_VERSION, 5): error("This project requires Qt 5 or higher")
-}
+# Enable exceptions
+CONFIG += exceptions
+
+# Output directories
+OBJECTS_DIR = build/obj
+MOC_DIR = build/moc
+UI_DIR = build/ui
+
+# Remove manual library linking - qmake will handle this automatically
+# DO NOT USE: LIBS += -lQtCore -lQtGui -lQtWidgets -lQtSql
+
+# Disable precompiled headers
+CONFIG -= precompile_header

@@ -29,7 +29,7 @@
 
 class CommandsWindow : public QDialog
 {
-    // Q_OBJECT removed - no signals/slots
+    Q_OBJECT
 
 public:
     enum Mode {
@@ -48,13 +48,8 @@ public:
                             QWidget *parent = nullptr);
     ~CommandsWindow();
 
-    // Get the current command data
     Command getCurrentCommand() const;
-
-    // Set command data (for edit mode)
     void setCommand(const Command& command);
-
-    // Set window mode
     void setMode(Mode mode);
     Mode getMode() const { return currentMode; }
 
@@ -66,18 +61,17 @@ public slots:
     void accept() override;
     void reject() override;
 
-    // Remove these slot declarations since we removed Q_OBJECT
-    // private slots:
-    //     void onSaveClicked();
-    //     void onCancelClicked();
-    //     void onClientChanged();
-    //     void onTotalChanged();
-    //     void onPaymentMethodChanged();
-    //     void onValidationTimer();
-    //     void onClientSearch();
-    //     void onSelectClientClicked();
-    //     void onNewClientClicked();
-    //     void onCalculateTotal();
+private slots:
+    void onSaveClicked();
+    void onCancelClicked();
+    void onClientChanged();
+    void onTotalChanged();
+    void onPaymentMethodChanged();
+    void onValidationTimer();
+    void onClientSearch();
+    void onSelectClientClicked();
+    void onNewClientClicked();
+    void onCalculateTotal();
 
 private:
     // UI Setup
@@ -108,19 +102,6 @@ private:
     // Utility
     void updateWindowTitle();
     void updateButtonStates();
-    // Method declarations (no longer slots)
-    void onSaveClicked();
-    void onCancelClicked();
-    void onClientChanged();
-    void onTotalChanged();
-    void onPaymentMethodChanged();
-    void onValidationTimer();
-    void onClientSearch();
-    void onSelectClientClicked();
-    void onNewClientClicked();
-    void onCalculateTotal();
-
-    // Utility methods
     void setFieldsReadOnly(bool readOnly);
     QString formatCurrency(double amount) const;
     double parseCurrency(const QString& text) const;

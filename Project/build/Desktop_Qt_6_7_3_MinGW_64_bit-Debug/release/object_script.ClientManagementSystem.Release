@@ -1,0 +1,11 @@
+release/main.o
+release/clients.o
+release/commands.o
+release/connection.o
+release/mainwindow.o
+release/clientswindow.o
+release/commandswindow.o
+release/moc_clients.o
+release/moc_commands.o
+release/moc_mainwindow.o
+release/moc_commandswindow.o

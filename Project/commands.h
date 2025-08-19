@@ -123,6 +123,7 @@ private slots:
 private:
     QSqlTableModel* tableModel;
     QSqlTableModel* joinedModel;
+    QSqlQuery createConnectedQuery();
 
     // Helper methods
     bool executeQuery(QSqlQuery& query, const QString& operation);

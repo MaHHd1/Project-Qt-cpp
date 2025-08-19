@@ -62,9 +62,9 @@ int main(int argc, char *argv[])
             clientsTableExists = true;
             qDebug() << "✓ CLIENTS table found";
         }
-        if (table.toUpper() == "COMMANDES") {
+        if (table.toUpper() == "COMMANDS") {
             commandsTableExists = true;
-            qDebug() << "✓ COMMANDES table found";
+            qDebug() << "✓ COMMANDS table found";
         }
     }
 
@@ -78,10 +78,10 @@ int main(int argc, char *argv[])
     }
 
     if (!commandsTableExists) {
-        qDebug() << "⚠ WARNING: COMMANDES table not found";
+        qDebug() << "⚠ WARNING: COMMANDS table not found";
         QMessageBox::warning(nullptr,
                              "Table Warning",
-                             "COMMANDES table not found in database.\n"
+                             "COMMANDS table not found in database.\n"
                              "Some features may not work correctly.");
     }
 
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
     }
 
     if (commandsTableExists) {
-        QSqlQuery commandCount = conn.executeSelectQuery("SELECT COUNT(*) FROM COMMANDES");
+        QSqlQuery commandCount = conn.executeSelectQuery("SELECT COUNT(*) FROM COMMANDS");
         if (commandCount.next()) {
             int count = commandCount.value(0).toInt();
             qDebug() << "Number of commands in database:" << count;
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
                              QString("Successfully connected to database 'lakhoua'!\n\n"
                                      "Tables found:\n"
                                      "• CLIENTS: %1\n"
-                                     "• COMMANDES: %2")
+                                     "• COMMANDS: %2")
                                  .arg(clientsTableExists ? "✓ Available" : "✗ Missing")
                                  .arg(commandsTableExists ? "✓ Available" : "✗ Missing"));
 

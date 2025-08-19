@@ -15,11 +15,12 @@ Connection::Connection() : connected(false)
 
 Connection::~Connection()
 {
-    closeConnection();
+    // Don't automatically close connection in destructor for singleton
+    // closeConnection();
 }
 
-Connection& Connection::getInstance()
-{
+// Fixed getInstance method - don't recreate connection automatically
+Connection& Connection::getInstance() {
     static Connection instance;
     return instance;
 }
@@ -27,7 +28,7 @@ Connection& Connection::getInstance()
 bool Connection::createConnection()
 {
     // Close existing connection if any
-    if (connected) {
+    if (connected && db.isOpen()) {
         closeConnection();
     }
 
@@ -103,20 +104,29 @@ void Connection::closeConnection()
     }
     connected = false;
 
-    // Remove the database connection
-    if (QSqlDatabase::contains("OracleConnection")) {
-        QSqlDatabase::removeDatabase("OracleConnection");
-    }
+    // Only remove the database connection when explicitly closing
+    // Don't remove it automatically to prevent issues with ongoing queries
 }
 
 bool Connection::isConnected() const
 {
-    return connected && db.isOpen();
+    return connected && db.isOpen() && db.isValid();
 }
 
 QSqlDatabase Connection::getDatabase() const
 {
-    return db;
+    // Always return the same database instance
+    return QSqlDatabase::database("OracleConnection");
+}
+
+// Add a method to ensure connection is alive
+bool Connection::ensureConnected()
+{
+    if (!isConnected()) {
+        qDebug() << "Connection lost, attempting to reconnect...";
+        return createConnection();
+    }
+    return true;
 }
 
 bool Connection::testConnection()
@@ -141,14 +151,14 @@ bool Connection::testConnection()
 
 bool Connection::executeQuery(const QString& queryString)
 {
-    if (!isConnected()) {
+    if (!ensureConnected()) {
         QString errorMsg = "Database not connected! Cannot execute query.";
         qDebug() << errorMsg;
         QMessageBox::warning(nullptr, "Database Error", errorMsg);
         return false;
     }
 
-    QSqlQuery query(db);
+    QSqlQuery query(getDatabase());
     if (!query.exec(queryString)) {
         QString errorMsg = QString("Query execution failed!\n\n"
                                    "Query: %1\n\n"
@@ -166,9 +176,9 @@ bool Connection::executeQuery(const QString& queryString)
 
 QSqlQuery Connection::executeSelectQuery(const QString& queryString)
 {
-    QSqlQuery query(db);
+    QSqlQuery query(getDatabase());
 
-    if (!isConnected()) {
+    if (!ensureConnected()) {
         qDebug() << "Database not connected! Cannot execute select query.";
         return query;
     }

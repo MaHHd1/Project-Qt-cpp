@@ -608,11 +608,6 @@ void CommandsWindow::populateForm()
     paymentMethodCombo->setCurrentText(currentCommand.paymentMethod);
     deliveryAddressEdit->setPlainText(currentCommand.deliveryAddress);
 
-    // Handle notes field - comment out if Command doesn't have notes field
-    // if (notesEdit) {
-    //     notesEdit->setPlainText(currentCommand.notes);
-    // }
-
     // Set client selection
     if (currentCommand.clientId > 0) {
         for (int i = 0; i < clientCombo->count(); ++i) {
@@ -927,8 +922,7 @@ void CommandsWindow::showEvent(QShowEvent *event)
     animateShow();
 }
 
-void CommandsWindow::accept()
-{
+void CommandsWindow::accept() {
     if (currentMode == ViewMode) {
         setMode(EditMode);
         return;

@@ -21,6 +21,7 @@ public:
     bool createConnection();
     void closeConnection();
     bool isConnected() const;
+    bool ensureConnected(); // New method to ensure connection is alive
 
     // Get database reference
     QSqlDatabase getDatabase() const;

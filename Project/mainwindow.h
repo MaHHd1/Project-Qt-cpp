@@ -57,6 +57,9 @@ private slots:
     void onSearchCommands();
     void refreshStatistics();
     void animateStatCards();
+    void editClient(int row);
+    void deleteClient(int row);
+    void editCommand(int row);
 
 private:
     Ui::MainWindow *ui;
@@ -115,6 +118,10 @@ private:
     void animateWidget(QWidget *widget, int duration = 300);
     void setCardHoverEffect(QFrame *card);
     QString formatCurrency(double amount);
+
+    // Command edit/delete methods - MOVED TO PRIVATE SECTION
+    void editCommandById(int commandId);
+    void deleteCommandById(int commandId);
 };
 
 #endif // MAINWINDOW_H
