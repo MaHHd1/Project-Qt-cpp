@@ -1,6 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QPrinter>
+#include <QPrintDialog>
+#include <QTextDocument>
+#include <QFileDialog>
 #include <QMainWindow>
 #include <QTabWidget>
 #include <QLabel>
@@ -23,6 +27,9 @@
 #include <QShowEvent>
 #include <QTableWidgetItem>
 #include <QIcon>
+#include <QInputDialog>        // Added for QInputDialog
+#include <QDesktopServices>    // Added for QDesktopServices
+#include <QUrl>               // Added for QUrl
 
 #include "clientswindow.h"
 #include "commandswindow.h"
@@ -78,6 +85,8 @@ private:
     QLineEdit *clientSearchEdit;
     QTableWidget *clientsTable;
 
+    QPushButton *sendMailBtn;
+
     // Commands tab components
     QWidget *commandsTab;
     QFrame *commandsStatsFrame;
@@ -122,6 +131,15 @@ private:
     // Command edit/delete methods - MOVED TO PRIVATE SECTION
     void editCommandById(int commandId);
     void deleteCommandById(int commandId);
+
+    void generateClientsCommandsPDF();
+    void onSendMailClicked();
+    void sendClientCommandsEmail(int clientId);  // Keep this for backward compatibility
+    QString createEmailContent(const Client &client, const QList<Command> &commands);
+
+    // NEW METHODS - Add these:
+    Client findClientByEmail(const QString &email);
+    void sendClientCommandsEmailByAddress(const Client &client, const QList<Command> &commands);
 };
 
 #endif // MAINWINDOW_H

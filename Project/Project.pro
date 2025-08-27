@@ -82,3 +82,4 @@ UI_DIR = build/ui
 
 # Disable precompiled headers
 CONFIG -= precompile_header
+QT += printsupport

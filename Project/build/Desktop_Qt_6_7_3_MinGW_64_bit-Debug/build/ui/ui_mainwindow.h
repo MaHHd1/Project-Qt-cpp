@@ -74,6 +74,7 @@ public:
     QPushButton *addCommandBtn;
     QPushButton *salesReportBtn;
     QPushButton *deliveryStatusBtn;
+    QPushButton *sendMailBtn;
     QSpacerItem *commandActionsHSpacer;
     QHBoxLayout *commandSearchLayout;
     QLineEdit *commandSearchEdit;
@@ -146,8 +147,8 @@ public:
 "    font-size: 14px;\n"
 "    font-weight: 300;\n"
 "}"));
-        headerFrame->setFrameShape(QFrame::NoFrame);
-        headerFrame->setFrameShadow(QFrame::Raised);
+        headerFrame->setFrameShape(QFrame::Shape::NoFrame);
+        headerFrame->setFrameShadow(QFrame::Shadow::Raised);
         headerLayout = new QVBoxLayout(headerFrame);
         headerLayout->setObjectName("headerLayout");
         headerLayout->setContentsMargins(30, 15, 30, 15);
@@ -233,8 +234,8 @@ public:
 "    border-radius: 15px;\n"
 "    margin-bottom: 10px;\n"
 "}"));
-        clientsStatsFrame->setFrameShape(QFrame::StyledPanel);
-        clientsStatsFrame->setFrameShadow(QFrame::Raised);
+        clientsStatsFrame->setFrameShape(QFrame::Shape::StyledPanel);
+        clientsStatsFrame->setFrameShadow(QFrame::Shadow::Raised);
 
         clientsLayout->addWidget(clientsStatsFrame);
 
@@ -381,7 +382,7 @@ public:
 "    font-weight: 600;\n"
 "}"));
         clientsTable->setAlternatingRowColors(true);
-        clientsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+        clientsTable->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
         clientsTable->setSortingEnabled(true);
 
         clientsLayout->addWidget(clientsTable);
@@ -420,8 +421,8 @@ public:
 "    border-radius: 15px;\n"
 "    margin-bottom: 10px;\n"
 "}"));
-        commandsStatsFrame->setFrameShape(QFrame::StyledPanel);
-        commandsStatsFrame->setFrameShadow(QFrame::Raised);
+        commandsStatsFrame->setFrameShape(QFrame::Shape::StyledPanel);
+        commandsStatsFrame->setFrameShadow(QFrame::Shadow::Raised);
 
         commandsLayout->addWidget(commandsStatsFrame);
 
@@ -489,6 +490,26 @@ public:
 "}"));
 
         commandActionsLayout->addWidget(deliveryStatusBtn);
+
+        sendMailBtn = new QPushButton(commandsTab);
+        sendMailBtn->setObjectName("sendMailBtn");
+        sendMailBtn->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"    background: transparent;\n"
+"    color: #d93025;\n"
+"    border: 2px solid #d93025;\n"
+"    border-radius: 10px;\n"
+"    padding: 10px 22px;\n"
+"    font-size: 14px;\n"
+"    font-weight: 500;\n"
+"    min-width: 120px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background: #d93025;\n"
+"    color: white;\n"
+"}"));
+
+        commandActionsLayout->addWidget(sendMailBtn);
 
         commandActionsHSpacer = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
 
@@ -568,7 +589,7 @@ public:
 "    font-weight: 600;\n"
 "}"));
         commandsTable->setAlternatingRowColors(true);
-        commandsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+        commandsTable->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
         commandsTable->setSortingEnabled(true);
 
         commandsLayout->addWidget(commandsTable);
@@ -580,7 +601,7 @@ public:
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 1400, 22));
+        menubar->setGeometry(QRect(0, 0, 1400, 33));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName("menuFile");
         menuView = new QMenu(menubar);
@@ -611,7 +632,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        mainTabWidget->setCurrentIndex(0);
+        mainTabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -653,16 +674,20 @@ public:
         clientsHeaderLabel->setText(QCoreApplication::translate("MainWindow", "\360\237\221\245 Client Management", nullptr));
         clientsSubtitleLabel->setText(QCoreApplication::translate("MainWindow", "Manage customer information, add new clients, and view client details", nullptr));
         addClientBtn->setText(QCoreApplication::translate("MainWindow", "\342\236\225 Add New Client", nullptr));
-        clientStatsBtn->setText(QCoreApplication::translate("MainWindow", "\360\237\223\212 View Statistics", nullptr));
-        exportClientsBtn->setText(QCoreApplication::translate("MainWindow", "\360\237\223\204 Export Data", nullptr));
+        clientStatsBtn->setText(QCoreApplication::translate("MainWindow", "\360\237\244\226 Chatbot", nullptr));
+        exportClientsBtn->setText(QCoreApplication::translate("MainWindow", "\360\237\224\204 Refresh Data", nullptr));
         clientSearchEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "\360\237\224\215 Search clients by name, email, or city...", nullptr));
         clientSearchBtn->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
         mainTabWidget->setTabText(mainTabWidget->indexOf(clientsTab), QCoreApplication::translate("MainWindow", "\360\237\221\245 Clients Management", nullptr));
         commandsHeaderLabel->setText(QCoreApplication::translate("MainWindow", "\360\237\223\213 Commands Management", nullptr));
         commandsSubtitleLabel->setText(QCoreApplication::translate("MainWindow", "Track orders, manage deliveries, and monitor payment status", nullptr));
         addCommandBtn->setText(QCoreApplication::translate("MainWindow", "\342\236\225 New Command", nullptr));
-        salesReportBtn->setText(QCoreApplication::translate("MainWindow", "\360\237\223\210 Sales Report", nullptr));
-        deliveryStatusBtn->setText(QCoreApplication::translate("MainWindow", "\360\237\232\232 Delivery Status", nullptr));
+        salesReportBtn->setText(QCoreApplication::translate("MainWindow", "\360\237\224\204 Refresh Data", nullptr));
+        deliveryStatusBtn->setText(QCoreApplication::translate("MainWindow", "\360\237\223\204 Generate PDF", nullptr));
+        sendMailBtn->setText(QCoreApplication::translate("MainWindow", "\360\237\223\247 Send Mail", nullptr));
+#if QT_CONFIG(tooltip)
+        sendMailBtn->setToolTip(QCoreApplication::translate("MainWindow", "Send client commands via Gmail", nullptr));
+#endif // QT_CONFIG(tooltip)
         commandSearchEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "\360\237\224\215 Search commands by ID, client, or payment method...", nullptr));
         commandSearchBtn->setText(QCoreApplication::translate("MainWindow", "Search", nullptr));
         mainTabWidget->setTabText(mainTabWidget->indexOf(commandsTab), QCoreApplication::translate("MainWindow", "\360\237\223\213 Commands Management", nullptr));

@@ -84,10 +84,19 @@ void MainWindow::setupUI()
     salesReportBtn = ui->salesReportBtn;
     commandSearchEdit = ui->commandSearchEdit;
     commandsTable = ui->commandsTable;
+    sendMailBtn = ui->sendMailBtn;  // Add this line
 
     // Setup tables and statistics
     setupTables();
     setupStatisticsFrames();
+    // Update button texts to match new functionality
+    ui->clientStatsBtn->setText("🤖 Chatbot");
+    ui->exportClientsBtn->setText("🔄 Refresh Data");
+    ui->salesReportBtn->setText("🔄 Refresh Data");
+    ui->deliveryStatusBtn->setText("📄 Generate PDF");
+    ui->deliveryStatusBtn->setToolTip("Generate PDF report of clients and their commands");
+    ui->sendMailBtn->setText("📧 Send Mail");  // Add this line
+    ui->sendMailBtn->setToolTip("Send client commands via email");  // Add this line
 }
 
 void MainWindow::setupStatisticsFrames()
@@ -469,6 +478,8 @@ void MainWindow::connectSignals()
     connect(clientManager, &ClientManager::clientAdded, this, &MainWindow::loadClientsData);
     connect(clientManager, &ClientManager::clientModified, this, &MainWindow::loadClientsData);
     connect(clientManager, &ClientManager::clientRemoved, this, &MainWindow::loadClientsData);
+    connect(ui->deliveryStatusBtn, &QPushButton::clicked, this, &MainWindow::generateClientsCommandsPDF);
+    connect(ui->sendMailBtn, &QPushButton::clicked, this, &MainWindow::onSendMailClicked);
 }
 
 QFrame* MainWindow::createStatCard(const QString &title, const QString &value, const QString &icon)
@@ -1039,4 +1050,308 @@ void MainWindow::deleteCommandById(int commandId)
     }
 }
 
+//pdf
+void MainWindow::generateClientsCommandsPDF()
+{
+    // Ask user for save location
+    QString fileName = QFileDialog::getSaveFileName(this, "Save PDF",
+                                                    QDir::homePath() + "/clients_commands_report.pdf",
+                                                    "PDF Files (*.pdf)");
+
+    if (fileName.isEmpty()) {
+        return; // User canceled
+    }
+
+    // Create printer and set output format
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(fileName);
+    printer.setPageSize(QPageSize(QPageSize::A4));
+    printer.setPageOrientation(QPageLayout::Portrait);
+
+    // Create HTML content for the PDF
+    QString htmlContent;
+
+    // HTML header with styling
+    htmlContent = R"(
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #34495e; border-bottom: 1px solid #bdc3c7; padding-bottom: 5px; margin-top: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th { background-color: #3498db; color: white; padding: 10px; text-align: left; }
+        td { padding: 8px; border-bottom: 1px solid #ddd; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        .client-header { background-color: #ecf0f1; padding: 10px; margin-top: 20px; border-radius: 5px; }
+        .no-commands { color: #7f8c8d; font-style: italic; }
+        .total-row { font-weight: bold; background-color: #eaf2f8; }
+        .timestamp { text-align: right; color: #7f8c8d; font-size: 12px; }
+    </style>
+    </head>
+    <body>
+    )";
+
+    // Report title and timestamp
+    htmlContent += QString("<h1>Clients and Commands Report</h1>");
+    htmlContent += QString("<p class='timestamp'>Generated on: %1</p>").arg(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+
+    // Get all clients
+    QList<Client> clients = clientManager->getAllClients();
+
+    if (clients.isEmpty()) {
+        htmlContent += "<p>No clients found in the database.</p>";
+    } else {
+        htmlContent += QString("<p>Total clients: %1</p>").arg(clients.size());
+
+        // Process each client
+        for (const Client &client : clients) {
+            htmlContent += QString("<div class='client-header'>");
+            htmlContent += QString("<h2>Client: %1 (ID: %2)</h2>").arg(client.name).arg(client.id);
+            htmlContent += QString("<p><strong>Email:</strong> %1</p>").arg(client.email);
+            htmlContent += QString("<p><strong>Address:</strong> %1, %2 %3</p>").arg(client.address).arg(client.city).arg(client.postal);
+            htmlContent += "</div>";
+
+            // Get commands for this client
+            QList<Command> commands = commandManager->getClientCommands(client.id);
+
+            if (commands.isEmpty()) {
+                htmlContent += "<p class='no-commands'>No commands found for this client.</p>";
+            } else {
+                htmlContent += "<table>";
+                htmlContent += "<tr><th>Command ID</th><th>Date</th><th>Total</th><th>Payment Method</th><th>Delivery Address</th></tr>";
+
+                double clientTotal = 0.0;
+                for (const Command &command : commands) {
+                    htmlContent += QString("<tr>"
+                                           "<td>%1</td>"
+                                           "<td>%2</td>"
+                                           "<td>$%3</td>"
+                                           "<td>%4</td>"
+                                           "<td>%5</td>"
+                                           "</tr>")
+                                       .arg(command.commandId)
+                                       .arg(command.commandDate.toString("yyyy-MM-dd"))
+                                       .arg(command.total)
+                                       .arg(command.paymentMethod)
+                                       .arg(command.deliveryAddress);
+
+                    clientTotal += command.getTotalAmount();
+                }
+
+                // Add total row
+                htmlContent += QString("<tr class='total-row'>"
+                                       "<td colspan='2'><strong>Total for client:</strong></td>"
+                                       "<td><strong>$%1</strong></td>"
+                                       "<td colspan='2'></td>"
+                                       "</tr>").arg(QString::number(clientTotal, 'f', 2));
+
+                htmlContent += "</table>";
+            }
+        }
+    }
+
+    // Add overall statistics
+    htmlContent += "<h2>Overall Statistics</h2>";
+    htmlContent += "<table>";
+    htmlContent += QString("<tr><td>Total Clients:</td><td>%1</td></tr>").arg(clients.size());
+    htmlContent += QString("<tr><td>Total Commands:</td><td>%1</td></tr>").arg(commandManager->getDAO()->getCommandCount());
+    htmlContent += QString("<tr><td>Total Sales:</td><td>$%1</td></tr>").arg(QString::number(commandManager->getDAO()->getTotalSales(), 'f', 2));
+    htmlContent += "</table>";
+
+    // Close HTML
+    htmlContent += "</body></html>";
+
+    // Create document and print to PDF
+    QTextDocument document;
+    document.setHtml(htmlContent);
+    document.print(&printer);
+
+    QMessageBox::information(this, "PDF Generated",
+                             QString("PDF report has been successfully generated and saved to:\n%1").arg(fileName));
+}
+void MainWindow::onSendMailClicked()
+{
+    // Show input dialog to get email address
+    bool ok;
+    QString emailAddress = QInputDialog::getText(this,
+                                                 "Send Client Commands",
+                                                 "Enter client email address:",
+                                                 QLineEdit::Normal,
+                                                 "mehdilakhoua123@gmail.com", // Pre-fill with known email
+                                                 &ok);
+
+    if (!ok || emailAddress.isEmpty()) {
+        return; // User canceled or entered empty email
+    }
+
+    // Trim whitespace from the input
+    emailAddress = emailAddress.trimmed();
+
+    qDebug() << "User entered email:" << emailAddress;
+
+    // Validate email format (basic validation)
+    QRegularExpression emailRegex("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$");
+    if (!emailRegex.match(emailAddress).hasMatch()) {
+        QMessageBox::warning(this, "Invalid Email",
+                             "Please enter a valid email address format.\n\n"
+                             "Example: mehdilakhoua123@gmail.com");
+        return;
+    }
+
+    // Find client by email in database
+    Client client = findClientByEmail(emailAddress);
+
+    if (client.id <= 0) {
+        // Show specific error with the exact email format needed
+        QMessageBox::warning(this, "Email Not Found",
+                             QString("No client found with email address: %1\n\n"
+                                     "Available email addresses in database:\n"
+                                     "- mehdilakhoua123@gmail.com (Mahdi)\n"
+                                     "- yac@tn.com (Yacine)\n\n"
+                                     "Please enter the exact email address.")
+                                 .arg(emailAddress));
+        return;
+    }
+
+    // Get commands for this client
+    QList<Command> commands = commandManager->getClientCommands(client.id);
+
+    if (commands.isEmpty()) {
+        QMessageBox::information(this, "No Commands",
+                                 QString("No commands found for client: %1 (%2)")
+                                     .arg(client.name).arg(emailAddress));
+        return;
+    }
+
+    // Send email
+    sendClientCommandsEmailByAddress(client, commands);
+}
+
+void MainWindow::sendClientCommandsEmail(int clientId)
+{
+    Client client = clientManager->getClient(clientId);
+    if (client.id <= 0) {
+        QMessageBox::warning(this, "Error", "Client not found.");
+        return;
+    }
+
+    QList<Command> commands = commandManager->getClientCommands(clientId);
+    if (commands.isEmpty()) {
+        QMessageBox::information(this, "No Commands",
+                                 QString("No commands found for client: %1").arg(client.name));
+        return;
+    }
+
+    // Create email content
+    QString subject = QString("Your Order History - %1").arg(client.name);
+    QString body = createEmailContent(client, commands);
+
+    // Open default email client with pre-filled content
+    QString mailtoUrl = QString("mailto:%1?subject=%2&body=%3")
+                            .arg(client.email)
+                            .arg(QUrl::toPercentEncoding(subject))
+                            .arg(QUrl::toPercentEncoding(body));
+
+    QDesktopServices::openUrl(QUrl(mailtoUrl));
+
+    QMessageBox::information(this, "Email Ready",
+                             QString("Email prepared for %1. Your email client should open with the message.").arg(client.name));
+}
+
+QString MainWindow::createEmailContent(const Client &client, const QList<Command> &commands)
+{
+    QString content;
+
+    content += QString("Dear %1,\n\n").arg(client.name);
+    content += "Here is your order history:\n\n";
+
+    double totalAmount = 0.0;
+
+    content += "┌─────────────────────────────────────────────────────────────┐\n";
+    content += "│                      ORDER HISTORY                          │\n";
+    content += "├─────────┬──────────────┬──────────┬─────────────┬───────────┤\n";
+    content += "│ Order # │     Date     │  Amount  │  Payment    │ Status    │\n";
+    content += "├─────────┼──────────────┼──────────┼─────────────┼───────────┤\n";
+
+    for (const Command &command : commands) {
+        content += QString("│ %1 │ %2 │ $%3 │ %4 │ Delivered │\n")
+                       .arg(command.commandId, 7)
+                       .arg(command.commandDate.toString("yyyy-MM-dd"), 12)
+                       .arg(command.total, 8)
+                       .arg(command.paymentMethod.left(11), 11);
+
+        totalAmount += command.getTotalAmount();
+    }
+
+    content += "├─────────┼──────────────┼──────────┼─────────────┼───────────┤\n";
+    content += QString("│ Total: %1 │             │ $%2 │             │           │\n")
+                   .arg(commands.size(), 7)
+                   .arg(QString::number(totalAmount, 'f', 2), 8);
+    content += "└─────────┴──────────────┴──────────┴─────────────┴───────────┘\n\n";
+
+    content += "Thank you for your business!\n\n";
+    content += "Best regards,\n";
+    content += "Your Company Team\n";
+    content += "Email: your-company@example.com\n";
+    content += "Phone: +1-555-0123\n";
+
+    return content;
+}
+Client MainWindow::findClientByEmail(const QString &email)
+{
+    QList<Client> allClients = clientManager->getAllClients();
+
+    // Debug: show what we're searching for
+    qDebug() << "Searching for email:" << email;
+
+    // Debug: show all available clients and emails
+    qDebug() << "Available clients:";
+    for (const Client &client : allClients) {
+        qDebug() << "  - ID:" << client.id << "Name:" << client.name << "Email:" << client.email;
+    }
+
+    // Normalize the search email (trim and lowercase)
+    QString searchEmail = email.trimmed().toLower();
+
+    for (const Client &client : allClients) {
+        // Normalize the client email from database
+        QString clientEmail = client.email.trimmed().toLower();
+
+        qDebug() << "Comparing: search='" << searchEmail << "' vs client='" << clientEmail << "'";
+
+        if (clientEmail == searchEmail) {
+            qDebug() << "MATCH FOUND! Client ID:" << client.id;
+            return client;
+        }
+    }
+
+    qDebug() << "NO MATCH FOUND for email:" << searchEmail;
+
+    // Return empty client if not found
+    Client emptyClient;
+    emptyClient.id = -1;
+    return emptyClient;
+}
+void MainWindow::sendClientCommandsEmailByAddress(const Client &client, const QList<Command> &commands)
+{
+    // Create email content
+    QString subject = QString("Your Order History - %1").arg(client.name);
+    QString body = createEmailContent(client, commands);
+
+    // Open default email client with pre-filled content
+    QString mailtoUrl = QString("mailto:%1?subject=%2&body=%3")
+                            .arg(client.email)
+                            .arg(QUrl::toPercentEncoding(subject))
+                            .arg(QUrl::toPercentEncoding(body));
+
+    QDesktopServices::openUrl(QUrl(mailtoUrl));
+
+    QMessageBox::information(this, "Email Ready",
+                             QString("Email prepared for %1 (%2).\n\n"
+                                     "Your email client should open with the message ready to send.")
+                                 .arg(client.name).arg(client.email));
+}
 
