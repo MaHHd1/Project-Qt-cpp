@@ -389,6 +389,7 @@ Makefile: ../../Project.pro C:/Qt/6.7.3/mingw_64/mkspecs/win32-g++/qmake.conf C:
 		C:/Qt/6.7.3/mingw_64/mkspecs/features/resolve_config.prf \
 		C:/Qt/6.7.3/mingw_64/mkspecs/features/exclusive_builds_post.prf \
 		C:/Qt/6.7.3/mingw_64/mkspecs/features/default_post.prf \
+		C:/Qt/6.7.3/mingw_64/mkspecs/features/link_pkgconfig.prf \
 		C:/Qt/6.7.3/mingw_64/mkspecs/features/exceptions.prf \
 		C:/Qt/6.7.3/mingw_64/mkspecs/features/win32/windows.prf \
 		C:/Qt/6.7.3/mingw_64/mkspecs/features/warn_on.prf \
@@ -410,6 +411,7 @@ Makefile: ../../Project.pro C:/Qt/6.7.3/mingw_64/mkspecs/win32-g++/qmake.conf C:
 		C:/Qt/6.7.3/mingw_64/lib/Qt6Widgets.prl \
 		C:/Qt/6.7.3/mingw_64/lib/Qt6Gui.prl \
 		C:/Qt/6.7.3/mingw_64/lib/Qt6Sql.prl \
+		C:/Qt/6.7.3/mingw_64/lib/Qt6Network.prl \
 		C:/Qt/6.7.3/mingw_64/lib/Qt6Core.prl \
 		C:/Qt/6.7.3/mingw_64/lib/Qt6EntryPoint.prl \
 		C:/Qt/6.7.3/mingw_64/mkspecs/features/build_pass.prf
@@ -733,6 +735,7 @@ C:/Qt/6.7.3/mingw_64/mkspecs/features/win32/default_pre.prf:
 C:/Qt/6.7.3/mingw_64/mkspecs/features/resolve_config.prf:
 C:/Qt/6.7.3/mingw_64/mkspecs/features/exclusive_builds_post.prf:
 C:/Qt/6.7.3/mingw_64/mkspecs/features/default_post.prf:
+C:/Qt/6.7.3/mingw_64/mkspecs/features/link_pkgconfig.prf:
 C:/Qt/6.7.3/mingw_64/mkspecs/features/exceptions.prf:
 C:/Qt/6.7.3/mingw_64/mkspecs/features/win32/windows.prf:
 C:/Qt/6.7.3/mingw_64/mkspecs/features/warn_on.prf:
@@ -754,6 +757,7 @@ C:/Qt/6.7.3/mingw_64/lib/Qt6PrintSupport.prl:
 C:/Qt/6.7.3/mingw_64/lib/Qt6Widgets.prl:
 C:/Qt/6.7.3/mingw_64/lib/Qt6Gui.prl:
 C:/Qt/6.7.3/mingw_64/lib/Qt6Sql.prl:
+C:/Qt/6.7.3/mingw_64/lib/Qt6Network.prl:
 C:/Qt/6.7.3/mingw_64/lib/Qt6Core.prl:
 C:/Qt/6.7.3/mingw_64/lib/Qt6EntryPoint.prl:
 C:/Qt/6.7.3/mingw_64/mkspecs/features/build_pass.prf:

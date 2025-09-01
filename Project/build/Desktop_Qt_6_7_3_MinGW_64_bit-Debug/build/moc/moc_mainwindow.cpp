@@ -50,7 +50,8 @@ constexpr auto qt_meta_stringdata_CLASSMainWindowENDCLASS = QtMocHelpers::string
     "editClient",
     "row",
     "deleteClient",
-    "editCommand"
+    "editCommand",
+    "onChatbotClicked"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
 #error "qtmochelpers.h not found or too old."
@@ -63,7 +64,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-      11,   14, // methods
+      12,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -71,17 +72,18 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    1,   80,    2, 0x08,    1 /* Private */,
-       4,    0,   83,    2, 0x08,    3 /* Private */,
-       5,    0,   84,    2, 0x08,    4 /* Private */,
-       6,    0,   85,    2, 0x08,    5 /* Private */,
-       7,    0,   86,    2, 0x08,    6 /* Private */,
-       8,    0,   87,    2, 0x08,    7 /* Private */,
-       9,    0,   88,    2, 0x08,    8 /* Private */,
-      10,    0,   89,    2, 0x08,    9 /* Private */,
-      11,    1,   90,    2, 0x08,   10 /* Private */,
-      13,    1,   93,    2, 0x08,   12 /* Private */,
-      14,    1,   96,    2, 0x08,   14 /* Private */,
+       1,    1,   86,    2, 0x08,    1 /* Private */,
+       4,    0,   89,    2, 0x08,    3 /* Private */,
+       5,    0,   90,    2, 0x08,    4 /* Private */,
+       6,    0,   91,    2, 0x08,    5 /* Private */,
+       7,    0,   92,    2, 0x08,    6 /* Private */,
+       8,    0,   93,    2, 0x08,    7 /* Private */,
+       9,    0,   94,    2, 0x08,    8 /* Private */,
+      10,    0,   95,    2, 0x08,    9 /* Private */,
+      11,    1,   96,    2, 0x08,   10 /* Private */,
+      13,    1,   99,    2, 0x08,   12 /* Private */,
+      14,    1,  102,    2, 0x08,   14 /* Private */,
+      15,    0,  105,    2, 0x08,   16 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Int,    3,
@@ -95,6 +97,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
     QMetaType::Void, QMetaType::Int,   12,
     QMetaType::Void, QMetaType::Int,   12,
     QMetaType::Void, QMetaType::Int,   12,
+    QMetaType::Void,
 
        0        // eod
 };
@@ -133,7 +136,9 @@ Q_CONSTINIT const QMetaObject MainWindow::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<int, std::false_type>,
         // method 'editCommand'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        QtPrivate::TypeAndForceComplete<int, std::false_type>
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        // method 'onChatbotClicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
     nullptr
 } };
@@ -155,6 +160,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 8: _t->editClient((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         case 9: _t->deleteClient((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         case 10: _t->editCommand((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 11: _t->onChatbotClicked(); break;
         default: ;
         }
     }
@@ -179,13 +185,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 11)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 11;
+        _id -= 12;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 11)
+        if (_id < 12)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 11;
+        _id -= 12;
     }
     return _id;
 }

@@ -20,6 +20,7 @@
 #include <QSplitter>
 #include <QGroupBox>
 #include <QProgressBar>
+#include <QProgressDialog>       // FIXED: Added missing include
 #include <QTimer>
 #include <QPropertyAnimation>
 #include <QGraphicsOpacityEffect>
@@ -27,14 +28,19 @@
 #include <QShowEvent>
 #include <QTableWidgetItem>
 #include <QIcon>
-#include <QInputDialog>        // Added for QInputDialog
-#include <QDesktopServices>    // Added for QDesktopServices
-#include <QUrl>               // Added for QUrl
+#include <QInputDialog>          // Added for QInputDialog
+#include <QDesktopServices>      // Added for QDesktopServices
+#include <QUrl>                  // Added for QUrl
+#include <QRegularExpression>    // FIXED: Added missing include
+#include <QMessageBox>           // FIXED: Added missing include
 
-#include "clientswindow.h"
-#include "commandswindow.h"
+#include "chatbotdialog.h"
 #include "clients.h"
 #include "commands.h"
+#include "clientswindow.h"       // Add this include
+#include "commandswindow.h"      // Add this include
+#include <QDesktopServices>
+#include <QUrl>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -67,6 +73,7 @@ private slots:
     void editClient(int row);
     void deleteClient(int row);
     void editCommand(int row);
+    void onChatbotClicked();
 
 private:
     Ui::MainWindow *ui;
@@ -132,6 +139,10 @@ private:
     void editCommandById(int commandId);
     void deleteCommandById(int commandId);
 
+
+    void setupEmailService();
+    void sendEmailViaClient(const QString &email, const QString &subject, const QString &body);
+
     void generateClientsCommandsPDF();
     void onSendMailClicked();
     void sendClientCommandsEmail(int clientId);  // Keep this for backward compatibility
@@ -140,6 +151,8 @@ private:
     // NEW METHODS - Add these:
     Client findClientByEmail(const QString &email);
     void sendClientCommandsEmailByAddress(const Client &client, const QList<Command> &commands);
+    double calculateTotalValue(const QList<Command> &commands);  // ADDED: Helper method
+    ChatbotDialog *chatbotDialog;
 };
 
 #endif // MAINWINDOW_H

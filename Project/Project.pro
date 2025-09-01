@@ -1,8 +1,11 @@
 # Project.pro - Qt Project Configuration File
 # Client Management System with Oracle Database Connection
 
-# Qt modules required - let qmake handle the linking automatically
-QT += core gui widgets sql
+# Qt modules required - FIXED: Added missing modules
+QT += core gui widgets sql printsupport network
+
+# Enable C++17 standard - FIXED: Added for better compatibility
+CONFIG += c++17
 
 # Enable Qt's moc system
 CONFIG += qt warn_on
@@ -32,7 +35,8 @@ SOURCES += \
     connection.cpp \
     mainwindow.cpp \
     clientswindow.cpp \
-    commandswindow.cpp
+    commandswindow.cpp \
+    chatbotdialog.cpp
 
 # Header files (.h)
 HEADERS += \
@@ -41,20 +45,29 @@ HEADERS += \
     connection.h \
     mainwindow.h \
     clientswindow.h \
-    commandswindow.h
+    commandswindow.h \
+    chatbotdialog.h \
+    emailservice.h
 
-# UI files (.ui)
-FORMS += mainwindow.ui
+# UI files (.ui) - FIXED: Added both UI files
+FORMS += \
+    mainwindow.ui \
+    chatbotdialog.ui
 
 # Compiler flags
 QMAKE_CXXFLAGS += -Wall -Wextra
-QMAKE_CXXFLAGS_RELEASE += -O2
+
+# FIXED: Remove problematic Release flags that might conflict
+# QMAKE_CXXFLAGS_RELEASE += -O2
 
 # Platform-specific configurations
 win32 {
     # Windows-specific configuration
     CONFIG += windows
     QMAKE_CXXFLAGS += -DUNICODE -D_UNICODE
+
+    # FIXED: Add Windows-specific libraries for network functionality
+    LIBS += -lws2_32 -lwsock32
 }
 
 # Debug and Release configurations
@@ -72,14 +85,20 @@ INCLUDEPATH += $$PWD
 # Enable exceptions
 CONFIG += exceptions
 
+# FIXED: Enable SSL support for email functionality
+QT += network
+CONFIG += openssl
+
 # Output directories
 OBJECTS_DIR = build/obj
 MOC_DIR = build/moc
 UI_DIR = build/ui
 
-# Remove manual library linking - qmake will handle this automatically
-# DO NOT USE: LIBS += -lQtCore -lQtGui -lQtWidgets -lQtSql
-
 # Disable precompiled headers
 CONFIG -= precompile_header
-QT += printsupport
+
+# FIXED: Ensure proper linking order
+CONFIG += link_pkgconfig
+
+# Add resources if you have any (uncomment if needed)
+# RESOURCES += resources.qrc
